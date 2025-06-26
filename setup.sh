@@ -70,14 +70,6 @@ else
   exit 1
 fi
 
-# Clone autoscript repo dan mulai install
-cd /root
-if [[ -d autoscript_znand ]]; then rm -rf autoscript_znand; fi
-git clone https://github.com/znand-dev/autoscript_znand.git
-cd autoscript_znand
-chmod +x install.sh
-screen -S setup ./install.sh
-
 # Auto menu saat login
 cat > /root/.profile <<-END
 if [ -f ~/.bashrc ]; then
