@@ -107,7 +107,7 @@ autoscript_znand/
 
 ## 💬 Support & Diskusi
 
-Join channel: [t.me/znanddev](https://t.me/znanddev) *(ganti dengan link Telegram lu bro kalau ada)*  
+Join channel: [t.me/znanddev](https://t.me/znanddev) 
 Follow GitHub: [github.com/znand-dev](https://github.com/znand-dev)
 
 ---
