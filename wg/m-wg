@@ -1,0 +1,31 @@
+#!/bin/bash
+# Menu WireGuard - by znand-dev
+
+# Warna
+GREEN='\e[1;32m'
+YELLOW='\e[1;33m'
+CYAN='\e[1;36m'
+NC='\e[0m'
+
+clear
+echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${CYAN}             ⚙️ MENU WIREGUARD VPN             ${NC}"
+echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}[1]${NC} Tambah Akun WireGuard"
+echo -e "${GREEN}[2]${NC} Hapus Akun WireGuard"
+echo -e "${GREEN}[3]${NC} Lihat Konfigurasi Akun"
+echo -e "${GREEN}[4]${NC} Cek Status WireGuard"
+echo -e "${GREEN}[5]${NC} Restart WireGuard"
+echo -e "${GREEN}[x]${NC} Kembali ke menu utama"
+echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+read -p "👉 Pilih opsi: " opt
+
+case $opt in
+1) wg-add ;;
+2) wg-del ;;
+3) wg-show ;;
+4) wg show ;;
+5) systemctl restart wg-quick@wg0 && echo "✅ WireGuard direstart!" ;;
+x) menu ;;
+*) echo "❌ Pilihan salah!" ; sleep 1 ; m-wg ;;
+esac
