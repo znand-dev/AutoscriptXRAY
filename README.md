@@ -20,7 +20,7 @@ apt update -y && apt install -y git curl screen
 
 # 3. Clone repo dari GitHub
 git clone https://github.com/znand-dev/AutoscriptXRAY.git
-cd autoscript_znand
+cd AutoscriptXRAY
 
 # 4. Jalankan installer via screen
 chmod +x setup.sh
