@@ -19,7 +19,7 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1
 apt update -y && apt install -y git curl screen
 
 # 3. Clone repo dari GitHub
-git clone https://github.com/znand-dev/autoscript_znand.git
+git clone https://github.com/znand-dev/AutoscriptXRAY.git
 cd autoscript_znand
 
 # 4. Jalankan installer via screen
