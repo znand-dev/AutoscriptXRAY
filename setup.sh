@@ -2,7 +2,7 @@
 # Setup Script for AutoScript_ZNAND
 # Penyesuaian & Inspirasi dari GIVPN by znand-dev
 
-cd
+cd "$(dirname "$0")"
 rm -f setup.sh
 clear
 
