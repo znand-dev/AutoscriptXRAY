@@ -8,12 +8,12 @@ Script modular dan interaktif untuk install protokol VPN lengkap: **SSH, WebSock
 
 ## 🚀 Quick Install
 ```bash
-# 1. Disable IPv6
+# 1. Install dependensi dasar
+apt update -y && apt upgrade -y && apt install git curl screen sudo -y
+
+# 2. Disable IPv6
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sysctl -w net.ipv6.conf.default.disable_ipv6=1
-
-# 2. Install dependensi dasar
-apt update -y && apt install -y git curl screen
 
 # 3. Clone repo dari GitHub
 git clone https://github.com/znand-dev/AutoscriptXRAY.git
