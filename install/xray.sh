@@ -24,9 +24,17 @@ chmod +x /usr/local/bin/xray
 rm -f /tmp/xray.zip
 
 # Konfigurasi domain
-echo -e ""
-read -p "Masukkan domain (pastikan A record mengarah ke VPS): " domain
+# Ambil domain dari file yang sudah dibuat di setup.sh
+if [[ -f /root/domain ]]; then
+  domain=$(cat /root/domain)
+else
+  echo -e "[ERROR] File /root/domain tidak ditemukan!"
+  exit 1
+fi
+
+# Simpan ulang ke lokasi yang dibutuhkan (kalau perlu)
 echo "$domain" > /etc/xray/domain
+
 
 # Install acme.sh dan request cert
 curl https://acme-install.netlify.app/acme.sh -o acme.sh && bash acme.sh
