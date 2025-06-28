@@ -85,7 +85,6 @@ else
   exit 1
 fi
 
-<<<<<<< HEAD
 # Eksekusi Installer per Fitur
 bash install/ssh.sh
 bash install/xray.sh
@@ -96,10 +95,9 @@ bash install/websocket.sh
 cd "$(dirname "$0")"
 chmod +x install.sh
 screen -S setup ./install.sh
->>>>>>> 0136728 (updated setup.sh)
 
 # Tambahkan auto menu
-cat > /root/.profile <<-END
+cat > /root/.profile
 if [ "\$BASH" ]; then
   if [ -f ~/.bashrc ]; then
     . ~/.bashrc
