@@ -89,11 +89,18 @@ else
   exit 1
 fi
 
+<<<<<<< HEAD
 # Eksekusi Installer per Fitur
 bash install/ssh.sh
 bash install/xray.sh
 bash install/wg.sh
 bash install/websocket.sh
+=======
+# Clone autoscript repo dan mulai install
+cd "$(dirname "$0")"
+chmod +x install.sh
+screen -S setup ./install.sh
+>>>>>>> 0136728 (updated setup.sh)
 
 # Tambahkan auto menu
 cat > /root/.profile <<-END
@@ -120,4 +127,3 @@ secs_to_human $(( end_time - start_time ))
 
 echo -e "${green}Installation complete. Rebooting in 10 seconds...${NC}"
 sleep 10
-reboot
