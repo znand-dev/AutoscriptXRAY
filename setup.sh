@@ -3,7 +3,7 @@
 # Penyesuaian & Inspirasi dari GIVPN by znand-dev
 
 cd
-rm -rf setup.sh
+rm -f setup.sh
 clear
 
 # Warna
@@ -18,15 +18,18 @@ function info() { echo -e "${green}[INFO]${NC} $1"; }
 function warn() { echo -e "${yellow}[WARNING]${NC} $1"; }
 function error() { echo -e "${red}[ERROR]${NC} $1"; }
 
+# Mulai timer
+start_time=$(date +%s)
+
 # Check Root
 if [ "${EUID}" -ne 0 ]; then
-  error "Script must be run as root."
+  error "Script harus dijalankan sebagai root."
   exit 1
 fi
 
 # Check OpenVZ
 if [ "$(systemd-detect-virt)" == "openvz" ]; then
-  error "OpenVZ is not supported. Use KVM/VMWare."
+  error "OpenVZ tidak didukung. Gunakan KVM/VMWare."
   exit 1
 fi
 
@@ -86,18 +89,36 @@ else
 fi
 
 # Eksekusi Installer per Fitur
+info "Menjalankan installer SSH..."
 bash install/ssh.sh
+info "Menjalankan installer XRAY..."
 bash install/xray.sh
+info "Menjalankan installer WireGuard..."
 bash install/wg.sh
+info "Menjalankan installer WebSocket..."
 bash install/websocket.sh
-=======
-# Clone autoscript repo dan mulai install
-cd "$(dirname "$0")"
-chmod +x install.sh
-screen -S setup ./install.sh
 
-# Tambahkan auto menu
-cat > /root/.profile
+# Salin sub-menu & tools ke /usr/bin
+info "Menyalin command menu..."
+cp -f ssh/m-sshovpn /usr/bin/
+cp -f xray/m-vmess /usr/bin/
+cp -f xray/m-vless /usr/bin/
+cp -f xray/m-trojan /usr/bin/
+cp -f xray/m-ssws /usr/bin/
+cp -f wg/m-wg /usr/bin/
+cp -f tools/tools-menu /usr/bin/
+cp -f tools/backup.sh /usr/bin/
+cp -f tools/speedtest.sh /usr/bin/
+cp -f tools/domain.sh /usr/bin/
+cp -f websocket/*.sh /usr/bin/
+cp -f menu.sh /usr/bin/menu
+
+# Set permission eksekusi
+chmod +x /usr/bin/*
+chmod +x ssh/*.sh xray/*.sh wg/*.sh websocket/*.sh tools/*.sh /usr/bin/menu
+
+# Tambahkan menu otomatis saat login
+cat > /root/.profile <<-EOF
 if [ "\$BASH" ]; then
   if [ -f ~/.bashrc ]; then
     . ~/.bashrc
@@ -105,19 +126,16 @@ if [ "\$BASH" ]; then
 fi
 clear
 menu
-END
+EOF
 chmod 644 /root/.profile
 
 # Bersih-bersih file sementara
 rm -f cf ssh-vpn.sh ins-xray.sh insshws.sh setup.sh
 
-# Auto Reboot
-secs_to_human() {
-  echo "Installation took \$(( \$1 / 60 ))m \$(( \$1 % 60 ))s"
-}
-start_time=$(date +%s)
+# Tampilkan durasi dan reboot
 end_time=$(date +%s)
-secs_to_human $(( end_time - start_time ))
-
-echo -e "${green}Installation complete. Rebooting in 10 seconds...${NC}"
+elapsed=$((end_time - start_time))
+echo -e "${green}✅ Instalasi selesai dalam $((elapsed / 60)) menit $((elapsed % 60)) detik.${NC}"
+echo -e "${green}♻️ VPS akan reboot dalam 10 detik...${NC}"
 sleep 10
+reboot
