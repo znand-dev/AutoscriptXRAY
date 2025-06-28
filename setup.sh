@@ -47,10 +47,6 @@ for file in domain scdomain; do
 done
 touch /var/lib/ipvps.conf
 
-# Disable IPv6
-sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
-sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1
-
 # Set Timezone
 ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 
