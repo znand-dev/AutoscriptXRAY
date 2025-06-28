@@ -7,9 +7,6 @@ Script modular dan interaktif untuk install protokol VPN lengkap: **SSH, WebSock
 ---
 
 ## 🚀 Quick Install
-
-Jalankan perintah ini langsung di VPS lo (Debian/Ubuntu KVM Only):
-
 ```bash
 # 1. Disable IPv6
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
