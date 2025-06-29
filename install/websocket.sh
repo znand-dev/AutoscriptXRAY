@@ -17,7 +17,7 @@ Description=SSH WebSocket by znand-dev
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 -m websocket_server -p 80 -h 127.0.0.1 --target 127.0.0.1:22
+ExecStart=/usr/bin/python3 /usr/local/bin/sshws.py
 Restart=always
 User=root
 
