@@ -57,7 +57,8 @@ ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 # Update & Install Dependensi
 info "Installing dependencies..."
 apt update -y >/dev/null 2>&1
-apt install -y curl wget git screen unzip bzip2 gzip coreutils python3 >/dev/null 2>&1
+apt install -y curl wget git screen unzip bzip2 gzip coreutils python3 python3-pip >/dev/null 2>&1
+pip3 install websocket-server >/dev/null 2>&1
 
 # Header Linux
 kernelver=$(uname -r)
@@ -113,6 +114,10 @@ cp -f tools/speedtest.sh /usr/bin/
 cp -f tools/domain.sh /usr/bin/
 cp -f websocket/*.sh /usr/bin/
 cp -f menu.sh /usr/bin/menu
+
+# Copy sshws.py ke tempat yang benar
+cp -f websocket/sshws.py /usr/local/bin/sshws.py
+chmod +x /usr/local/bin/sshws.py
 
 # Set permission eksekusi
 chmod +x /usr/bin/*
