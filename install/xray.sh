@@ -1,21 +1,19 @@
 #!/bin/bash
 # Setup Xray Core - by znand-dev
 
-# Warna
 GREEN='\033[0;32m'
+RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${GREEN}▶️ Memulai installasi Xray-core...${NC}"
+echo -e "${GREEN}▶️ Memulai instalasi Xray-core...${NC}"
 sleep 1
 
 # Install dependensi
 apt update -y
-apt install -y socat curl cron jq unzip gnupg coreutils
+apt install -y socat curl cron jq unzip gnupg coreutils lsof -qq
 
 # Download Xray-core terbaru
-mkdir -p /etc/xray
-mkdir -p /var/log/xray
-mkdir -p /usr/local/bin
+mkdir -p /etc/xray /var/log/xray /usr/local/bin
 
 echo -e "${GREEN}⬇️ Download Xray-core...${NC}"
 wget -q -O /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
@@ -24,26 +22,50 @@ chmod +x /usr/local/bin/xray
 rm -f /tmp/xray.zip
 
 # Konfigurasi domain
-# Ambil domain dari file yang sudah dibuat di setup.sh
 if [[ -f /root/domain ]]; then
   domain=$(cat /root/domain)
 else
-  echo -e "[ERROR] File /root/domain tidak ditemukan!"
+  echo -e "${RED}[ERROR] File /root/domain tidak ditemukan!${NC}"
   exit 1
 fi
 
-# Simpan ulang ke lokasi yang dibutuhkan (kalau perlu)
 echo "$domain" > /etc/xray/domain
 
+# Install & issue cert via acme.sh
+if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
+  curl https://acme-install.netlify.app/acme.sh -o acme.sh && bash acme.sh
+fi
 
-# Install acme.sh dan request cert
-curl https://acme-install.netlify.app/acme.sh -o acme.sh && bash acme.sh
+~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 ~/.acme.sh/acme.sh --register-account -m admin@$domain
 ~/.acme.sh/acme.sh --issue --standalone -d $domain --keylength ec-256
+
 ~/.acme.sh/acme.sh --install-cert -d $domain \
---key-file /etc/xray/private.key \
---fullchain-file /etc/xray/cert.crt \
---ecc
+  --key-file /etc/xray/private.key \
+  --fullchain-file /etc/xray/cert.crt \
+  --ecc
+
+# Dummy config JSON
+cat > /etc/xray/config.json <<EOF
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "warning"
+  },
+  "inbounds": [],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "blocked"
+    }
+  ]
+}
+EOF
 
 # Setup systemd service
 cat > /etc/systemd/system/xray.service <<EOF
@@ -67,28 +89,11 @@ EOF
 systemctl daemon-reload
 systemctl enable xray
 
-# Dummy config
-cat > /etc/xray/config.json <<EOF
-{
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "warning"
-  },
-  "inbounds": [],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "tag": "direct"
-    },
-    {
-      "protocol": "blackhole",
-      "tag": "blocked"
-    }
-  ]
-}
-EOF
+# Tambahkan info ke log install
+grep -q "XRAY TLS" /root/log-install.txt || echo "XRAY TLS         : 443" >> /root/log-install.txt
+grep -q "XRAY None TLS" /root/log-install.txt || echo "XRAY None TLS    : 80" >> /root/log-install.txt
 
+# Output final
 echo -e "${GREEN}✅ Xray-core berhasil di-install dan dikonfigurasi!${NC}"
 echo -e "${GREEN}📂 Config: /etc/xray/config.json${NC}"
 echo -e "${GREEN}🔐 Domain: $domain${NC}"
