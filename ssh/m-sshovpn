@@ -12,20 +12,22 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 echo -e "${CYAN}              🔐 MENU SSH & OVPN 🔐                ${NC}"
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${GREEN}[1]${NC} Tambah User SSH"
-echo -e "${GREEN}[2]${NC} Hapus User SSH"
-echo -e "${GREEN}[3]${NC} Cek Login Aktif"
-echo -e "${GREEN}[4]${NC} Cek Semua Akun Aktif"
-echo -e "${GREEN}[5]${NC} Restart Service SSH / Dropbear / Stunnel"
+echo -e "${GREEN}[2]${NC} Buat Trial SSH"
+echo -e "${GREEN}[3]${NC} Hapus User SSH"
+echo -e "${GREEN}[4]${NC} Cek Login Aktif"
+echo -e "${GREEN}[5]${NC} Cek Semua Akun Aktif"
+echo -e "${GREEN}[6]${NC} Restart Service SSH / Dropbear / Stunnel"
 echo -e "${GREEN}[x]${NC} Kembali ke menu utama"
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 read -p "👉 Pilih opsi: " opt
 
 case $opt in
 1) bash /etc/autoscriptvpn/ssh/add-ssh.sh ;;
-2) bash /etc/autoscriptvpn/ssh/del-ssh.sh ;;
-3) bash /etc/autoscriptvpn/ssh/cek-login.sh ;;
-4) bash /etc/autoscriptvpn/ssh/cek-aktif.sh ;;
-5) bash /etc/autoscriptvpn/ssh/restart-ssh.sh ;;
+2) bash /etc/autoscriptvpn/ssh/trial-ssh.sh ;;
+3) bash /etc/autoscriptvpn/ssh/del-ssh.sh ;;
+4) bash /etc/autoscriptvpn/ssh/cek-login.sh ;;
+5) bash /etc/autoscriptvpn/ssh/cek-aktif.sh ;;
+6) bash /etc/autoscriptvpn/ssh/restart-ssh.sh ;;
 x) menu ;;
 *) echo "Pilihan salah bro!" ; sleep 1 ; m-sshovpn ;;
 esac
