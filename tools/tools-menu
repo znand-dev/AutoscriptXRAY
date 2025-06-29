@@ -14,6 +14,7 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 echo -e "${GREEN}[1]${NC} Backup & Restore Config"
 echo -e "${GREEN}[2]${NC} Speedtest VPS"
 echo -e "${GREEN}[3]${NC} Ganti Domain XRAY"
+echo -e "${GREEN}[4]${NC} Cek status layanan aktif"
 echo -e "${GREEN}[x]${NC} Kembali ke menu utama"
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 read -p "👉 Pilih opsi: " opt
@@ -22,6 +23,7 @@ case $opt in
 1) bash /etc/autoscriptvpn/tools/backup.sh ;;
 2) bash /etc/autoscriptvpn/tools/speedtest.sh ;;
 3) bash /etc/autoscriptvpn/tools/domain.sh ;;
+4) bash /etc/autoscriptvpn/tools/running.sh ;;
 x) menu ;;
 *) echo "❌ Pilihan salah!" ; sleep 1 ; tools-menu ;;
 esac
