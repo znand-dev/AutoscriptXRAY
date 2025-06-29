@@ -117,6 +117,18 @@ cp -f menu.sh /usr/bin/menu
 chmod +x /usr/bin/*
 chmod +x ssh/*.sh xray/*.sh wg/*.sh websocket/*.sh tools/*.sh /usr/bin/menu
 
+# Copy semua script ke folder runtime /etc/autoscriptvpn
+info "Menyalin semua submenu ke /etc/autoscriptvpn/..."
+mkdir -p /etc/autoscriptvpn/{ssh,xray,websocket,tools,wg}
+
+cp -r ssh/*.sh /etc/autoscriptvpn/ssh/
+cp -r xray/*.sh /etc/autoscriptvpn/xray/
+cp -r websocket/*.sh /etc/autoscriptvpn/websocket/
+cp -r tools/*.sh /etc/autoscriptvpn/tools/
+cp -r wg/*.sh /etc/autoscriptvpn/wg/
+
+chmod +x /etc/autoscriptvpn/*/*.sh
+
 # Tambahkan menu otomatis saat login
 cat > /root/.profile <<-EOF
 if [ "\$BASH" ]; then
