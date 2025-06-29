@@ -21,6 +21,7 @@ cd AutoscriptXRAY
 
 # 4. Jalankan installer via screen
 chmod +x setup.sh
+chmod +x uninstall.sh
 screen -S setup ./setup.sh
 ```
 
