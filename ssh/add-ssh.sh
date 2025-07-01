@@ -18,16 +18,85 @@ squid=$(grep -w "Squid" /root/log-install.txt | cut -d: -f2)
 sshws=$(grep -w "SSH Websocket" /root/log-install.txt | cut -d: -f2 | awk '{print $1}')
 sshsslws=$(grep -w "SSH SSL Websocket" /root/log-install.txt | cut -d: -f2 | awk '{print $1}')
 
-# Input user
-read -p "👤 Username baru      : " username
-read -p "🔑 Password           : " password
-read -p "⏰ Expired (hari)     : " exp_days
+# Input user dengan validasi
+while true; do
+  read -p "👤 Username baru      : " username
+  
+  # Validasi format username
+  if [[ -z "$username" ]]; then
+    echo "❌ Username tidak boleh kosong!"
+    continue
+  fi
+  
+  if [[ ! "$username" =~ ^[a-zA-Z0-9_-]{3,32}$ ]]; then
+    echo "❌ Username tidak valid! (3-32 karakter: huruf, angka, underscore, dash)"
+    continue
+  fi
+  
+  # Check reserved usernames
+  reserved_users=("root" "admin" "administrator" "test" "guest" "user" "daemon" "sys" "www-data" "nobody")
+  if [[ " ${reserved_users[@]} " =~ " ${username} " ]]; then
+    echo "❌ Username '$username' adalah reserved system user!"
+    continue
+  fi
+  
+  # Validasi apakah user sudah exist
+  if id "$username" &>/dev/null; then
+    echo "❌ Username '$username' sudah terdaftar!"
+    continue
+  fi
+  
+  break
+done
 
-# Validasi
-if id "$username" &>/dev/null; then
-  echo "❌ Username '$username' sudah terdaftar!"
-  exit 1
-fi
+while true; do
+  read -s -p "🔑 Password           : " password
+  echo
+  
+  # Password validation
+  if [[ -z "$password" ]]; then
+    echo "❌ Password tidak boleh kosong!"
+    continue
+  fi
+  
+  if [[ ${#password} -lt 6 ]]; then
+    echo "❌ Password minimal 6 karakter!"
+    continue
+  fi
+  
+  if [[ ${#password} -gt 128 ]]; then
+    echo "❌ Password maksimal 128 karakter!"
+    continue
+  fi
+  
+  # Confirm password
+  read -s -p "🔑 Konfirmasi password: " password_confirm
+  echo
+  
+  if [[ "$password" != "$password_confirm" ]]; then
+    echo "❌ Password tidak cocok!"
+    continue
+  fi
+  
+  break
+done
+
+while true; do
+  read -p "⏰ Expired (hari)     : " exp_days
+  
+  # Validasi masa aktif
+  if [[ ! "$exp_days" =~ ^[0-9]{1,3}$ ]]; then
+    echo "❌ Masa aktif harus berupa angka!"
+    continue
+  fi
+  
+  if [[ "$exp_days" -lt 1 ]] || [[ "$exp_days" -gt 365 ]]; then
+    echo "❌ Masa aktif harus 1-365 hari!"
+    continue
+  fi
+  
+  break
+done
 
 # Buat akun
 exp_date=$(date -d "$exp_days days" +"%Y-%m-%d")

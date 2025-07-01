@@ -31,19 +31,78 @@ fi
 
 echo "$domain" > /etc/xray/domain
 
-# Install & issue cert via acme.sh
+# Install & issue cert via acme.sh dengan error handling
+echo -e "${GREEN}🔐 Setting up SSL certificates...${NC}"
+
 if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
-  curl https://acme-install.netlify.app/acme.sh -o acme.sh && bash acme.sh
+  echo -e "${GREEN}📥 Installing acme.sh...${NC}"
+  temp_acme=$(mktemp)
+  
+  if ! curl -s https://acme-install.netlify.app/acme.sh -o "$temp_acme"; then
+    echo -e "${RED}[ERROR] Gagal download acme.sh installer!${NC}"
+    rm -f "$temp_acme"
+    exit 1
+  fi
+  
+  # Basic security check
+  if ! head -1 "$temp_acme" | grep -q "#!/bin/bash\|#!/bin/sh"; then
+    echo -e "${RED}[ERROR] acme.sh installer tidak valid!${NC}"
+    rm -f "$temp_acme"
+    exit 1
+  fi
+  
+  mv "$temp_acme" acme.sh
+  chmod +x acme.sh
+  
+  if ! bash acme.sh; then
+    echo -e "${RED}[ERROR] Gagal install acme.sh!${NC}"
+    exit 1
+  fi
+  
+  rm -f acme.sh
 fi
 
-~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-~/.acme.sh/acme.sh --register-account -m admin@$domain
-~/.acme.sh/acme.sh --issue --standalone -d $domain --keylength ec-256
+# Set certificate authority
+if ! ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt; then
+  echo -e "${RED}[ERROR] Gagal set CA ke Let's Encrypt!${NC}"
+  exit 1
+fi
 
-~/.acme.sh/acme.sh --install-cert -d $domain \
+# Register account
+echo -e "${GREEN}📝 Registering account...${NC}"
+if ! ~/.acme.sh/acme.sh --register-account -m admin@$domain; then
+  echo -e "${RED}[ERROR] Gagal register account!${NC}"
+  exit 1
+fi
+
+# Issue certificate
+echo -e "${GREEN}🔒 Issuing SSL certificate for $domain...${NC}"
+if ! ~/.acme.sh/acme.sh --issue --standalone -d $domain --keylength ec-256; then
+  echo -e "${RED}[ERROR] Gagal issue SSL certificate!${NC}"
+  echo -e "${RED}Pastikan:${NC}"
+  echo -e "${RED}- Domain $domain mengarah ke IP server ini${NC}"
+  echo -e "${RED}- Port 80 tidak digunakan service lain${NC}"
+  echo -e "${RED}- Firewall tidak memblokir port 80${NC}"
+  exit 1
+fi
+
+# Install certificate
+echo -e "${GREEN}📋 Installing certificates...${NC}"
+if ! ~/.acme.sh/acme.sh --install-cert -d $domain \
   --key-file /etc/xray/private.key \
   --fullchain-file /etc/xray/cert.crt \
-  --ecc
+  --ecc; then
+  echo -e "${RED}[ERROR] Gagal install certificates!${NC}"
+  exit 1
+fi
+
+# Verify certificates
+if [[ ! -f /etc/xray/private.key ]] || [[ ! -f /etc/xray/cert.crt ]]; then
+  echo -e "${RED}[ERROR] Certificate files tidak ditemukan!${NC}"
+  exit 1
+fi
+
+echo -e "${GREEN}✅ SSL certificates berhasil di-setup!${NC}"
 
 # Dummy config JSON
 cat > /etc/xray/config.json <<EOF
