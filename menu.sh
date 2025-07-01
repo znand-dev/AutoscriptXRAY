@@ -14,13 +14,11 @@ echo -e ""
 echo -e "  [1] Menu SSH & Dropbear"
 echo -e "  [2] Menu Vmess"
 echo -e "  [3] Menu Vless"
-echo -e "  [4] Menu Trojan"
-echo -e "  [5] Menu Shadowsocks (WS)"
-echo -e "  [6] Menu WireGuard"
-echo -e "  [7] Menu Tools"
-echo -e "  [8] Status Service"
-echo -e "  [9] Clear RAM Cache"
-echo -e " [10] Reboot VPS"
+echo -e "  [4] Menu Tools"
+echo -e "  [5] Status Service"
+echo -e "  [6] Health Check System"
+echo -e "  [7] Clear RAM Cache"
+echo -e "  [8] Reboot VPS"
 echo -e "  [x] Exit"
 echo -e ""
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -31,13 +29,11 @@ case $menu in
   1) m-sshovpn ;;
   2) m-vmess ;;
   3) m-vless ;;
-  4) m-trojan ;;
-  5) m-ssws ;;
-  6) m-wg ;;
-  7) tools-menu ;;
-  8) running ;;
-  9) clearcache ;;
-  10) reboot ;;
+  4) tools-menu ;;
+  5) running ;;
+  6) bash tools/health-check.sh ;;
+  7) clearcache ;;
+  8) reboot ;;
   x) exit ;;
   *) echo "❌ Pilihan tidak valid!" ; sleep 1 ; menu ;;
 esac

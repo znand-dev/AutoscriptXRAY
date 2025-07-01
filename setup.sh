@@ -60,12 +60,17 @@ apt update -y >/dev/null 2>&1
 apt install -y curl wget git screen unzip bzip2 gzip coreutils python3 python3-pip >/dev/null 2>&1
 pip3 install websocket-server >/dev/null 2>&1
 
+# Install security dependencies
+info "Installing security dependencies..."
+chmod +x install-dependencies.sh
+./install-dependencies.sh
+
 # Header Linux
 kernelver=$(uname -r)
 headerpkg="linux-headers-$kernelver"
-if ! dpkg -s $headerpkg >/dev/null 2>&1; then
+if ! dpkg -s "$headerpkg" >/dev/null 2>&1; then
   info "Installing $headerpkg..."
-  apt install -y $headerpkg
+  apt install -y "$headerpkg"
 fi
 
 # Pilih Domain
@@ -75,9 +80,68 @@ echo "1. Gunakan Domain Acak (Cloudflare API)"
 echo "2. Masukkan Domain Sendiri"
 echo -n "Pilih [1/2]: "; read domopt
 if [[ "$domopt" == "1" ]]; then
-  wget -q https://raw.githubusercontent.com/givpn/AutoScriptXray/master/ssh/cf && chmod +x cf && ./cf
+  info "Downloading CloudFlare domain script..."
+  cf_url="https://raw.githubusercontent.com/givpn/AutoScriptXray/master/ssh/cf"
+  temp_cf=$(mktemp)
+  
+  if ! wget -q -O "$temp_cf" "$cf_url"; then
+    error "Gagal download CloudFlare script!"
+    exit 1
+  fi
+  
+  # Basic security check - ensure it's a shell script
+  if ! head -1 "$temp_cf" | grep -q "#!/bin/bash\|#!/bin/sh"; then
+    error "File yang didownload bukan bash script yang valid!"
+    rm -f "$temp_cf"
+    exit 1
+  fi
+  
+  # Check file size (basic sanity check)
+  file_size=$(stat -c%s "$temp_cf")
+  if [[ $file_size -lt 100 ]] || [[ $file_size -gt 50000 ]]; then
+    error "Ukuran file script tidak normal ($file_size bytes)"
+    rm -f "$temp_cf"
+    exit 1
+  fi
+  
+  mv "$temp_cf" cf
+  chmod +x cf && ./cf
 elif [[ "$domopt" == "2" ]]; then
-  read -rp "Masukkan domain kamu: " domain
+  while true; do
+    read -rp "Masukkan domain kamu: " domain
+    
+    # Validasi format domain
+    if [[ -z "$domain" ]]; then
+      error "Domain tidak boleh kosong!"
+      continue
+    fi
+    
+    # Basic domain format validation
+    if [[ ! "$domain" =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+      error "Format domain tidak valid! (contoh: example.com)"
+      continue
+    fi
+    
+    # Check domain length
+    if [[ ${#domain} -gt 253 ]]; then
+      error "Domain terlalu panjang! (maksimal 253 karakter)"
+      continue
+    fi
+    
+    # Test domain resolution
+    info "Testing domain resolution..."
+    if ! ping -c 1 "$domain" &>/dev/null && ! nslookup "$domain" &>/dev/null; then
+      warn "Domain tidak dapat di-resolve. Lanjutkan? (y/n)"
+      read -r confirm
+      if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+        continue
+      fi
+    fi
+    
+    break
+  done
+  
+  info "Menyimpan domain: $domain"
   echo "$domain" > /root/domain
   for dfile in domain scdomain; do
     echo "$domain" > /etc/xray/$dfile
@@ -95,8 +159,6 @@ info "Menjalankan installer SSH..."
 bash install/ssh.sh
 info "Menjalankan installer XRAY..."
 bash install/xray.sh
-info "Menjalankan installer WireGuard..."
-bash install/wg.sh
 info "Menjalankan installer WebSocket..."
 bash install/websocket.sh
 
@@ -105,9 +167,6 @@ info "Menyalin command menu..."
 cp -f ssh/m-sshovpn /usr/bin/
 cp -f xray/m-vmess /usr/bin/
 cp -f xray/m-vless /usr/bin/
-cp -f xray/m-trojan /usr/bin/
-cp -f xray/m-ssws /usr/bin/
-cp -f wg/m-wg /usr/bin/
 cp -f tools/tools-menu /usr/bin/
 cp -f tools/backup.sh /usr/bin/
 cp -f tools/speedtest.sh /usr/bin/
@@ -121,17 +180,16 @@ chmod +x /usr/local/bin/sshws.py
 
 # Set permission eksekusi
 chmod +x /usr/bin/*
-chmod +x ssh/*.sh xray/*.sh wg/*.sh websocket/*.sh tools/*.sh /usr/bin/menu
+chmod +x ssh/*.sh xray/*.sh websocket/*.sh tools/*.sh /usr/bin/menu
 
 # Copy semua script ke folder runtime /etc/autoscriptvpn
 info "Menyalin semua submenu ke /etc/autoscriptvpn/..."
-mkdir -p /etc/autoscriptvpn/{ssh,xray,websocket,tools,wg}
+mkdir -p /etc/autoscriptvpn/{ssh,xray,websocket,tools}
 
 cp -r ssh/*.sh /etc/autoscriptvpn/ssh/
 cp -r xray/*.sh /etc/autoscriptvpn/xray/
 cp -r websocket/*.sh /etc/autoscriptvpn/websocket/
 cp -r tools/*.sh /etc/autoscriptvpn/tools/
-cp -r wg/*.sh /etc/autoscriptvpn/wg/
 
 chmod +x /etc/autoscriptvpn/*/*.sh
 

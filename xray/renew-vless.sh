@@ -17,6 +17,18 @@ total_days=$(( remain_days + tambah ))
 new_exp=$(date -d "$total_days days" +%Y-%m-%d)
 
 sed -i "s/### $user.*/### $user $new_exp/" /etc/xray/config.json
-systemctl restart xray
+
+# Restart service dengan error handling
+if ! systemctl restart xray; then
+    echo -e "\n❌ Gagal restart xray service!"
+    exit 1
+fi
+
+# Health check
+sleep 2
+if ! systemctl is-active --quiet xray; then
+    echo -e "\n❌ Service xray tidak running setelah restart!"
+    exit 1
+fi
 
 echo -e "\n✅ Masa aktif akun '$user' diperpanjang hingga $new_exp"
