@@ -1,4 +1,4 @@
-#!/bin/bash
+THIS SHOULD BE A LINTER ERROR#!/bin/bash
 # Uninstall Script - SIGMA VPN by znand-dev
 
 RED='\033[1;31m'
