@@ -34,7 +34,7 @@ rm -f /root/log-install.txt /etc/log-create-ssh.log
 
 # 3. Hapus binary & script dari /usr/bin
 binaries=(
-  menu m-sshovpn m-vmess m-vless m-trojan m-ssws m-wg tools-menu
+  menu m-sshovpn m-vmess m-vless m-trojan m-ssws tools-menu
   trial-ssh backup.sh speedtest.sh domain.sh
   restart-ws.sh stop-ws.sh service-install.sh
 )

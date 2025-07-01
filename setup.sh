@@ -159,8 +159,6 @@ info "Menjalankan installer SSH..."
 bash install/ssh.sh
 info "Menjalankan installer XRAY..."
 bash install/xray.sh
-info "Menjalankan installer WireGuard..."
-bash install/wg.sh
 info "Menjalankan installer WebSocket..."
 bash install/websocket.sh
 
@@ -171,7 +169,6 @@ cp -f xray/m-vmess /usr/bin/
 cp -f xray/m-vless /usr/bin/
 cp -f xray/m-trojan /usr/bin/
 cp -f xray/m-ssws /usr/bin/
-cp -f wg/m-wg /usr/bin/
 cp -f tools/tools-menu /usr/bin/
 cp -f tools/backup.sh /usr/bin/
 cp -f tools/speedtest.sh /usr/bin/
@@ -185,17 +182,16 @@ chmod +x /usr/local/bin/sshws.py
 
 # Set permission eksekusi
 chmod +x /usr/bin/*
-chmod +x ssh/*.sh xray/*.sh wg/*.sh websocket/*.sh tools/*.sh /usr/bin/menu
+chmod +x ssh/*.sh xray/*.sh websocket/*.sh tools/*.sh /usr/bin/menu
 
 # Copy semua script ke folder runtime /etc/autoscriptvpn
 info "Menyalin semua submenu ke /etc/autoscriptvpn/..."
-mkdir -p /etc/autoscriptvpn/{ssh,xray,websocket,tools,wg}
+mkdir -p /etc/autoscriptvpn/{ssh,xray,websocket,tools}
 
 cp -r ssh/*.sh /etc/autoscriptvpn/ssh/
 cp -r xray/*.sh /etc/autoscriptvpn/xray/
 cp -r websocket/*.sh /etc/autoscriptvpn/websocket/
 cp -r tools/*.sh /etc/autoscriptvpn/tools/
-cp -r wg/*.sh /etc/autoscriptvpn/wg/
 
 chmod +x /etc/autoscriptvpn/*/*.sh
 

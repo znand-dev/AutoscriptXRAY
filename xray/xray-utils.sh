@@ -48,25 +48,7 @@ restart_xray_safe() {
     return 0
 }
 
-# Safe restart WireGuard service with error handling
-restart_wireguard_safe() {
-    info "Restarting WireGuard service..."
-    
-    if ! systemctl restart wg-quick@wg0; then
-        error "Gagal restart WireGuard service!"
-        return 1
-    fi
-    
-    # Health check
-    sleep 2
-    if ! systemctl is-active --quiet wg-quick@wg0; then
-        error "Service WireGuard tidak running setelah restart!"
-        return 1
-    fi
-    
-    info "WireGuard service restarted successfully"
-    return 0
-}
+# WireGuard functionality removed
 
 # Safe restart SSH WebSocket service
 restart_sshws_safe() {

@@ -19,7 +19,6 @@ services=(
   "sshws"
   "xray"
   "stunnel4"
-  "wg-quick@wg0"
 )
 
 for svc in "${services[@]}"; do

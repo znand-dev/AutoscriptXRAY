@@ -78,28 +78,7 @@ if [[ -f "tools/running.sh" ]]; then
     info "✅ tools/running.sh fixed"
 fi
 
-# Fix wg scripts
-if [[ -f "wg/wg-del.sh" ]]; then
-    info "Fixing wg/wg-del.sh..."
-    
-    # Fix file path
-    sed -i 's|rm -f /etc/wireguard/clients/$user.conf|rm -f "/etc/wireguard/clients/$user.conf"|g' wg/wg-del.sh
-    
-    info "✅ wg/wg-del.sh fixed"
-fi
-
-if [[ -f "wg/wg-add.sh" ]]; then
-    info "Fixing wg/wg-add.sh..."
-    
-    # Fix client_config assignments and usage
-    sed -i 's|client_config="/etc/wireguard/clients/$user.conf"|client_config="/etc/wireguard/clients/$user.conf"|g' wg/wg-add.sh
-    sed -i 's|cat > $client_config|cat > "$client_config"|g' wg/wg-add.sh
-    sed -i 's|rm -f "/etc/wireguard/clients/$user.conf"|rm -f "/etc/wireguard/clients/$user.conf"|g' wg/wg-add.sh
-    sed -i 's|cat $client_config|cat "$client_config"|g' wg/wg-add.sh
-    sed -i 's|qrencode -t ansiutf8 < $client_config|qrencode -t ansiutf8 < "$client_config"|g' wg/wg-add.sh
-    
-    info "✅ wg/wg-add.sh fixed"
-fi
+# WireGuard scripts removed - no longer applicable
 
 # Additional safety fixes for variables yang sering bermasalah
 info "Applying additional safety fixes..."
