@@ -34,8 +34,23 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 25
 EOF
 
-# Apply config
-systemctl restart wg-quick@wg0
+# Apply config dengan error handling
+if ! systemctl restart wg-quick@wg0; then
+    echo -e "\n❌ Gagal restart WireGuard service!"
+    # Cleanup config yang baru ditambah
+    wg-quick down wg0 2>/dev/null
+    sed -i "/# $user/,+3d" /etc/wireguard/wg0.conf
+    rm -f "/etc/wireguard/clients/$user.conf"
+    wg-quick up wg0 2>/dev/null
+    exit 1
+fi
+
+# Health check
+sleep 2
+if ! systemctl is-active --quiet wg-quick@wg0; then
+    echo -e "\n❌ WireGuard service tidak running setelah restart!"
+    exit 1
+fi
 
 # Tampilkan config + QR
 echo -e "\n✅ Akun WireGuard '$user' berhasil dibuat!"
