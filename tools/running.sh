@@ -22,7 +22,7 @@ services=(
 )
 
 for svc in "${services[@]}"; do
-  status=$(systemctl is-active $svc 2>/dev/null)
+  status=$(systemctl is-active "$svc" 2>/dev/null)
   printf "%-15s : %s\n" "$svc" "${status^^}"
 done
 

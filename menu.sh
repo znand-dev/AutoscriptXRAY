@@ -16,8 +16,9 @@ echo -e "  [2] Menu Vmess"
 echo -e "  [3] Menu Vless"
 echo -e "  [4] Menu Tools"
 echo -e "  [5] Status Service"
-echo -e "  [6] Clear RAM Cache"
-echo -e "  [7] Reboot VPS"
+echo -e "  [6] Health Check System"
+echo -e "  [7] Clear RAM Cache"
+echo -e "  [8] Reboot VPS"
 echo -e "  [x] Exit"
 echo -e ""
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -30,8 +31,9 @@ case $menu in
   3) m-vless ;;
   4) tools-menu ;;
   5) running ;;
-  6) clearcache ;;
-  7) reboot ;;
+  6) bash tools/health-check.sh ;;
+  7) clearcache ;;
+  8) reboot ;;
   x) exit ;;
   *) echo "❌ Pilihan tidak valid!" ; sleep 1 ; menu ;;
 esac

@@ -24,8 +24,18 @@ fi
 # Simpan domain baru ke file
 echo "$new_domain" > /etc/xray/domain
 
-# Restart service
-systemctl restart xray
+# Restart service dengan error handling
+if ! systemctl restart xray; then
+    echo -e "${YELLOW}❌ Gagal restart xray service!${NC}"
+    exit 1
+fi
+
+# Health check
+sleep 2
+if ! systemctl is-active --quiet xray; then
+    echo -e "${YELLOW}❌ Service xray tidak running setelah restart!${NC}"
+    exit 1
+fi
 
 # Output
 echo -e "${GREEN}✅ Domain berhasil diganti!${NC}"

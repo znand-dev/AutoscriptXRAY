@@ -23,9 +23,9 @@ mkdir -p "$backup_folder"
 case $opt in
 1)
   echo -e "\n📦 Membuat backup..."
-  cp -r /etc/xray/config.json $backup_folder/ 2>/dev/null
-  cp -r /etc/xray/domain $backup_folder/ 2>/dev/null
-  cp -r /usr/bin/* $backup_folder/ 2>/dev/null
+  cp -r /etc/xray/config.json "$backup_folder/" 2>/dev/null
+  cp -r /etc/xray/domain "$backup_folder/" 2>/dev/null
+  cp -r /usr/bin/* "$backup_folder/" 2>/dev/null
 
   cd /root
   zip -r backup-autoscript.zip backup-autoscript >/dev/null

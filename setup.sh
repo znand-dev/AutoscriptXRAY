@@ -68,9 +68,9 @@ chmod +x install-dependencies.sh
 # Header Linux
 kernelver=$(uname -r)
 headerpkg="linux-headers-$kernelver"
-if ! dpkg -s $headerpkg >/dev/null 2>&1; then
+if ! dpkg -s "$headerpkg" >/dev/null 2>&1; then
   info "Installing $headerpkg..."
-  apt install -y $headerpkg
+  apt install -y "$headerpkg"
 fi
 
 # Pilih Domain

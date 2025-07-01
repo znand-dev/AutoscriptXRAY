@@ -21,8 +21,8 @@ echo -e "${YELLOW}🚮 Menghapus SIGMA VPN...${NC}"
 # 1. Hentikan service terkait
 services=(xray xray@vless xray@vmess sshws stunnel4 dropbear)
 for svc in "${services[@]}"; do
-  systemctl stop $svc >/dev/null 2>&1
-  systemctl disable $svc >/dev/null 2>&1
+  systemctl stop "$svc" >/dev/null 2>&1
+  systemctl disable "$svc" >/dev/null 2>&1
 done
 
 # 2. Hapus file dan folder konfigurasi
@@ -40,13 +40,13 @@ binaries=(
 )
 
 for bin in "${binaries[@]}"; do
-  rm -f /usr/bin/$bin
+  rm -f "/usr/bin/$bin"
 done
 
 # 4. Hapus user SSH trial* (opsional)
 info "Menghapus user trial*..."
 for u in $(awk -F: '/^trial/ {print $1}' /etc/passwd); do
-  userdel -f $u >/dev/null 2>&1
+  userdel -f "$u" >/dev/null 2>&1
 done
 
 # 5. Opsional: hapus file repo (jika dijalankan dari folder Autoscript)
