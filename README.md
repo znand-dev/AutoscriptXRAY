@@ -2,7 +2,7 @@
 # 🔐 autoscript_znand
 
 🔥 AutoScript VPN all-in-one 🔥  
-Script modular dan interaktif untuk install protokol VPN lengkap: **SSH, WebSocket, XRAY (VMess, VLess, Trojan, Shadowsocks)**, dan berbagai tools DevOps + monitoring.
+Script modular dan interaktif untuk install protokol VPN lengkap: **SSH, WebSocket, XRAY (VMess, VLess)**, dan berbagai tools DevOps + monitoring.
 
 ---
 
@@ -30,7 +30,7 @@ screen -S setup ./setup.sh
 ## 📦 Fitur Utama
 
 - ✅ SSH + Dropbear + Stunnel + WebSocket
-- ✅ XRAY: Vmess, Vless, Trojan, Shadowsocks (WS + gRPC)
+- ✅ XRAY: Vmess, Vless (WS + gRPC)
 - ✅ Installer WebSocket custom
 - ✅ Menu interaktif per protokol
 - ✅ Tools tambahan: Backup, Domain, Speedtest
@@ -64,9 +64,7 @@ autoscript_znand/
 ├── xray/
 │   ├── m-vmess
 │   ├── m-vless
-│   ├── m-trojan
-│   ├── m-ssws
-│   ├── add-*.sh, del-*.sh, cek-*.sh, renew-*.sh (semua protokol)
+│   ├── add-*.sh, del-*.sh, cek-*.sh, renew-*.sh (VMess & VLess)
 ├── tools/
 │   ├── tools-menu
 │   ├── backup.sh

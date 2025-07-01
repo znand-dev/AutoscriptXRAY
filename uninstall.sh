@@ -1,4 +1,4 @@
-THIS SHOULD BE A LINTER ERROR#!/bin/bash
+#!/bin/bash
 # Uninstall Script - SIGMA VPN by znand-dev
 
 RED='\033[1;31m'
@@ -19,7 +19,7 @@ confirm
 echo -e "${YELLOW}🚮 Menghapus SIGMA VPN...${NC}"
 
 # 1. Hentikan service terkait
-services=(xray xray@trojan xray@vless xray@vmess sshws stunnel4 dropbear)
+services=(xray xray@vless xray@vmess sshws stunnel4 dropbear)
 for svc in "${services[@]}"; do
   systemctl stop $svc >/dev/null 2>&1
   systemctl disable $svc >/dev/null 2>&1
@@ -34,7 +34,7 @@ rm -f /root/log-install.txt /etc/log-create-ssh.log
 
 # 3. Hapus binary & script dari /usr/bin
 binaries=(
-  menu m-sshovpn m-vmess m-vless m-trojan m-ssws tools-menu
+  menu m-sshovpn m-vmess m-vless tools-menu
   trial-ssh backup.sh speedtest.sh domain.sh
   restart-ws.sh stop-ws.sh service-install.sh
 )

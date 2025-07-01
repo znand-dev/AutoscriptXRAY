@@ -167,7 +167,6 @@ info "Menyalin command menu..."
 cp -f ssh/m-sshovpn /usr/bin/
 cp -f xray/m-vmess /usr/bin/
 cp -f xray/m-vless /usr/bin/
-cp -f xray/m-ssws /usr/bin/
 cp -f tools/tools-menu /usr/bin/
 cp -f tools/backup.sh /usr/bin/
 cp -f tools/speedtest.sh /usr/bin/
