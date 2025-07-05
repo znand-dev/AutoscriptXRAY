@@ -29,14 +29,14 @@ screen -S setup ./setup.sh
 
 ## Fitur Utama
 
-- ✅ SSH + Dropbear + Stunnel + WebSocket
-- ✅ XRAY: Vmess, Vless, Trojan, Shadowsocks (WS + gRPC)
-- ✅ WireGuard VPN
-- ✅ Installer WebSocket custom
-- ✅ Menu interaktif per protokol
-- ✅ Tools tambahan: Backup, Domain, Speedtest
-- ✅ Setup domain random/manual
-- ✅ Autostart menu saat login VPS
+- SSH + Dropbear + Stunnel + WebSocket
+- XRAY: Vmess, Vless, Trojan, Shadowsocks (WS + gRPC)
+- WireGuard VPN
+- Installer WebSocket custom
+- Menu interaktif per protokol
+- Tools tambahan: Backup, Domain, Speedtest
+- Setup domain random/manual
+- Autostart menu saat login VPS
 
 ---
 
