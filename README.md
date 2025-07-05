@@ -1,12 +1,12 @@
 
-# 🔐 autoscript_znand
+# Autoscript VPN Tunneling 
 
-🔥 AutoScript VPN all-in-one 🔥  
+AutoScript VPN all-in-one 
 Script modular dan interaktif untuk install protokol VPN lengkap: **SSH, WebSocket, XRAY (VMess, VLess, Trojan, Shadowsocks), WireGuard**, dan berbagai tools DevOps + monitoring.
 
 ---
 
-## 🚀 Quick Install
+## Quick Install
 ```bash
 # 1. Install dependensi dasar
 apt update -y && apt upgrade -y && apt install git curl screen sudo -y
@@ -27,7 +27,7 @@ screen -S setup ./setup.sh
 
 ---
 
-## 📦 Fitur Utama
+## Fitur Utama
 
 - ✅ SSH + Dropbear + Stunnel + WebSocket
 - ✅ XRAY: Vmess, Vless, Trojan, Shadowsocks (WS + gRPC)
@@ -40,7 +40,7 @@ screen -S setup ./setup.sh
 
 ---
 
-## 📁 Struktur Direktori
+## Struktur Direktori
 
 ```bash
 autoscript_znand/
@@ -83,29 +83,15 @@ autoscript_znand/
 
 ---
 
-## ✅ Kompatibilitas
+## Kompatibilitas
 
 | OS           | Status    |
 |--------------|-----------|
-| Debian 10    | ✅ Support |
-| Debian 11    | ✅ Support |
-| Ubuntu 20.04 | ✅ Support |
-| Ubuntu 22.04 | ✅ Support |
+| Debian 10    | ✅ Supported |
+| Debian 11    | ✅ Supported |
+| Ubuntu 20.04 | ✅ Supported |
+| Ubuntu 22.04 | ✅ Supported |
 | OpenVZ       | ❌ Not supported |
 | KVM/VMWare   | ✅ Recommended |
-
----
-
-## 🤝 Credits
-
-- Original inspirasi: [givpn/AutoScriptXray](https://github.com/givpn/AutoScriptXray)
-- Custom version by: [znand-dev](https://github.com/znand-dev)
-
----
-
-## 💬 Support & Diskusi
-
-Join channel: [t.me/znanddev](https://t.me/znanddev)
-Follow GitHub: [github.com/znand-dev](https://github.com/znand-dev)
 
 ---
