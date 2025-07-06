@@ -58,7 +58,6 @@ ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 info "Installing dependencies..."
 apt update -y >/dev/null 2>&1
 apt install -y curl wget git screen unzip bzip2 gzip coreutils python3 python3-pip >/dev/null 2>&1
-pip3 install websocket-server >/dev/null 2>&1
 
 # Header Linux
 kernelver=$(uname -r)
@@ -91,18 +90,14 @@ else
 fi
 
 # Eksekusi Installer per Fitur
-info "Menjalankan installer SSH..."
-bash install/ssh.sh
+
 info "Menjalankan installer XRAY..."
 bash install/xray.sh
 info "Menjalankan installer WireGuard..."
 bash install/wg.sh
-info "Menjalankan installer WebSocket..."
-bash install/websocket.sh
 
 # Salin sub-menu & tools ke /usr/bin
 info "Menyalin command menu..."
-cp -f ssh/m-sshovpn /usr/bin/
 cp -f xray/m-vmess /usr/bin/
 cp -f xray/m-vless /usr/bin/
 cp -f xray/m-trojan /usr/bin/
@@ -112,24 +107,17 @@ cp -f tools/tools-menu /usr/bin/
 cp -f tools/backup.sh /usr/bin/
 cp -f tools/speedtest.sh /usr/bin/
 cp -f tools/domain.sh /usr/bin/
-cp -f websocket/*.sh /usr/bin/
 cp -f menu.sh /usr/bin/menu
-
-# Copy sshws.py ke tempat yang benar
-cp -f websocket/sshws.py /usr/local/bin/sshws.py
-chmod +x /usr/local/bin/sshws.py
 
 # Set permission eksekusi
 chmod +x /usr/bin/*
-chmod +x ssh/*.sh xray/*.sh wg/*.sh websocket/*.sh tools/*.sh /usr/bin/menu
+chmod +x  xray/*.sh wg/*.sh tools/*.sh /usr/bin/menu
 
 # Copy semua script ke folder runtime /etc/autoscriptvpn
 info "Menyalin semua submenu ke /etc/autoscriptvpn/..."
-mkdir -p /etc/autoscriptvpn/{ssh,xray,websocket,tools,wg}
+mkdir -p /etc/autoscriptvpn/{xray,tools,wg}
 
-cp -r ssh/*.sh /etc/autoscriptvpn/ssh/
 cp -r xray/*.sh /etc/autoscriptvpn/xray/
-cp -r websocket/*.sh /etc/autoscriptvpn/websocket/
 cp -r tools/*.sh /etc/autoscriptvpn/tools/
 cp -r wg/*.sh /etc/autoscriptvpn/wg/
 
