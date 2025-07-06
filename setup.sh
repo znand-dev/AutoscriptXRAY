@@ -1,6 +1,6 @@
 #!/bin/bash
-# Setup Script for AutoScript_ZNAND
-# Fokus: XRAY (VLESS, VMess, Trojan) + WireGuard Only
+# Setup Script XRAY_AIO
+# XRAY (VLESS, VMess, Trojan) + WireGuard Only
 
 echo "" > /root/log-install.txt
 cd "$(dirname "$0")"
