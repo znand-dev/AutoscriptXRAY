@@ -35,26 +35,22 @@ echo "$domain" > /etc/xray/domain
 if [ ! -f /root/.acme.sh/acme.sh ]; then
   echo -e "${GREEN}🔐 Menginstall acme.sh...${NC}"
   curl https://acme-install.netlify.app/acme.sh | bash
-  export PATH="/root/.acme.sh:$PATH"
-  source /root/.bashrc >/dev/null 2>&1 || true
-  sleep 3
+  export PATH="$HOME/.acme.sh":$PATH
 fi
 
-ACME="/root/.acme.sh/acme.sh"
-if [ ! -f "$ACME" ]; then
-  echo -e "${RED}[ERROR] acme.sh tetap tidak ditemukan setelah instalasi!${NC}"
-else
-  chmod +x "$ACME"
-  "$ACME" --set-default-ca --server letsencrypt
-  "$ACME" --register-account -m admin@$domain
-  "$ACME" --issue --standalone -d $domain --keylength ec-256
-  "$ACME" --install-cert -d $domain \
-    --key-file /etc/xray/private.key \
-    --fullchain-file /etc/xray/cert.crt \
-    --ecc
-fi
+chmod +x /root/.acme.sh/acme.sh
 
-# Dummy config JSON
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+/root/.acme.sh/acme.sh --register-account -m admin@$domain
+/root/.acme.sh/acme.sh --issue --standalone -d $domain --keylength ec-256
+
+mkdir -p /etc/xray
+/root/.acme.sh/acme.sh --install-cert -d $domain \
+  --key-file /etc/xray/private.key \
+  --fullchain-file /etc/xray/cert.crt \
+  --ecc
+
+# Deploy config.json gaya GIVPN
 cat > /etc/xray/config.json <<EOF
 {
   "log": {
@@ -62,7 +58,46 @@ cat > /etc/xray/config.json <<EOF
     "error": "/var/log/xray/error.log",
     "loglevel": "warning"
   },
-  "inbounds": [],
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vmess",
+      "settings": {
+        "clients": []
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray/cert.crt",
+              "keyFile": "/etc/xray/private.key"
+            }
+          ]
+        },
+        "wsSettings": {
+          "path": "/vmess"
+        }
+      },
+      "tag": "vmess-tls"
+    },
+    {
+      "port": 80,
+      "protocol": "vmess",
+      "settings": {
+        "clients": []
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "path": "/vmess"
+        }
+      },
+      "tag": "vmess-nontls"
+    }
+  ],
   "outbounds": [
     {
       "protocol": "freedom",
