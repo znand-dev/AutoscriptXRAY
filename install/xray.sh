@@ -32,15 +32,19 @@ fi
 echo "$domain" > /etc/xray/domain
 
 # Install & issue cert via acme.sh
-if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
-  curl https://acme-install.netlify.app/acme.sh -o acme.sh && bash acme.sh
+if [ ! -f /root/.acme.sh/acme.sh ]; then
+  echo -e "${GREEN}🔐 Menginstall acme.sh...${NC}"
+  curl https://acme-install.netlify.app/acme.sh | bash
+  export PATH="$HOME/.acme.sh":$PATH
 fi
 
-~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-~/.acme.sh/acme.sh --register-account -m admin@$domain
-~/.acme.sh/acme.sh --issue --standalone -d $domain --keylength ec-256
+chmod +x /root/.acme.sh/acme.sh
 
-~/.acme.sh/acme.sh --install-cert -d $domain \
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+/root/.acme.sh/acme.sh --register-account -m admin@$domain
+/root/.acme.sh/acme.sh --issue --standalone -d $domain --keylength ec-256
+
+/root/.acme.sh/acme.sh --install-cert -d $domain \
   --key-file /etc/xray/private.key \
   --fullchain-file /etc/xray/cert.crt \
   --ecc
