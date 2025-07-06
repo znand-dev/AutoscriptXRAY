@@ -2,7 +2,7 @@
 # Autoscript VPN Tunneling 
 
 AutoScript VPN all-in-one 
-Script modular dan interaktif untuk install protokol VPN lengkap: **SSH, WebSocket, XRAY (VMess, VLess, Trojan, Shadowsocks), WireGuard**, dan berbagai tools DevOps + monitoring.
+Script modular dan interaktif untuk install protokol VPN lengkap: **XRAY (VMess, VLess, Trojan, Shadowsocks), WireGuard**, dan berbagai tools DevOps + monitoring.
 
 ---
 
@@ -29,7 +29,6 @@ screen -S setup ./setup.sh
 
 ## Fitur Utama
 
-- SSH + Dropbear + Stunnel + WebSocket
 - XRAY: Vmess, Vless, Trojan, Shadowsocks (WS + gRPC)
 - WireGuard VPN
 - Installer WebSocket custom
