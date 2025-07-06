@@ -1,6 +1,6 @@
 #!/bin/bash
 # Setup Script for AutoScript_ZNAND
-# Penyesuaian & Inspirasi dari GIVPN by znand-dev
+# Fokus: XRAY (VLESS, VMess, Trojan) + WireGuard Only
 
 echo "" > /root/log-install.txt
 cd "$(dirname "$0")"
@@ -90,7 +90,6 @@ else
 fi
 
 # Eksekusi Installer per Fitur
-
 info "Menjalankan installer XRAY..."
 bash install/xray.sh
 info "Menjalankan installer WireGuard..."
@@ -111,7 +110,7 @@ cp -f menu.sh /usr/bin/menu
 
 # Set permission eksekusi
 chmod +x /usr/bin/*
-chmod +x  xray/*.sh wg/*.sh tools/*.sh /usr/bin/menu
+chmod +x xray/*.sh wg/*.sh tools/*.sh /usr/bin/menu
 
 # Copy semua script ke folder runtime /etc/autoscriptvpn
 info "Menyalin semua submenu ke /etc/autoscriptvpn/..."
@@ -136,7 +135,7 @@ EOF
 chmod 644 /root/.profile
 
 # Bersih-bersih file sementara
-rm -f cf ssh-vpn.sh ins-xray.sh insshws.sh setup.sh
+rm -f cf ins-xray.sh setup.sh
 
 # Tampilkan durasi dan reboot
 end_time=$(date +%s)
