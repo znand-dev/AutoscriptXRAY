@@ -32,28 +32,27 @@ fi
 echo "$domain" > /etc/xray/domain
 
 # Install & issue cert via acme.sh
-if [ ! -f "$HOME/.acme.sh/acme.sh" ]; then
+if [ ! -f /root/.acme.sh/acme.sh ]; then
   echo -e "${GREEN}🔐 Menginstall acme.sh...${NC}"
   curl https://acme-install.netlify.app/acme.sh | bash
-  source ~/.bashrc
-  sleep 2
+  export PATH="/root/.acme.sh:$PATH"
+  source /root/.bashrc >/dev/null 2>&1 || true
+  sleep 3
 fi
 
-ACME="$HOME/.acme.sh/acme.sh"
+ACME="/root/.acme.sh/acme.sh"
 if [ ! -f "$ACME" ]; then
-  echo -e "${RED}[ERROR] acme.sh tidak ditemukan setelah instalasi!${NC}"
-  exit 1
+  echo -e "${RED}[ERROR] acme.sh tetap tidak ditemukan setelah instalasi!${NC}"
+else
+  chmod +x "$ACME"
+  "$ACME" --set-default-ca --server letsencrypt
+  "$ACME" --register-account -m admin@$domain
+  "$ACME" --issue --standalone -d $domain --keylength ec-256
+  "$ACME" --install-cert -d $domain \
+    --key-file /etc/xray/private.key \
+    --fullchain-file /etc/xray/cert.crt \
+    --ecc
 fi
-
-chmod +x "$ACME"
-
-"$ACME" --set-default-ca --server letsencrypt
-"$ACME" --register-account -m admin@$domain
-"$ACME" --issue --standalone -d $domain --keylength ec-256
-"$ACME" --install-cert -d $domain \
-  --key-file /etc/xray/private.key \
-  --fullchain-file /etc/xray/cert.crt \
-  --ecc
 
 # Dummy config JSON
 cat > /etc/xray/config.json <<EOF
