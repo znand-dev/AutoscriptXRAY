@@ -11,8 +11,9 @@ else
   domain=$IP
 fi
 
-tls="$(cat ~/log-install.txt | grep -w "VMess WS TLS" | cut -d: -f2|sed 's/ //g')"
-none="$(cat ~/log-install.txt | grep -w "VMess WS none TLS" | cut -d: -f2|sed 's/ //g')"
+# Ambil port dari log
+tls=$(grep -w "XRAY TLS" /root/log-install.txt | cut -d: -f2 | tr -d ' ')
+none=$(grep -w "XRAY None TLS" /root/log-install.txt | cut -d: -f2 | tr -d ' ')
 
 # Input username
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
@@ -36,8 +37,8 @@ read -p "Expired (hari): " masaaktif
 exp=$(date -d "$masaaktif days" +"%Y-%m-%d")
 
 # Inject user ke config
-sed -i '/#vmess$/a\#& '"$user $exp"'\n},{"id": "'$uuid'","alterId": 0,"email": "'$user'"' /etc/xray/config.json
-sed -i '/#vmessgrpc$/a\#& '"$user $exp"'\n},{"id": "'$uuid'","alterId": 0,"email": "'$user'"' /etc/xray/config.json
+sed -i "/#vmess-tls\$/a\#& $user $exp\n      ,{\"id\": \"$uuid\",\"alterId\": 0,\"email\": \"$user\"}" /etc/xray/config.json
+sed -i "/#vmess-nontls\$/a\#& $user $exp\n      ,{\"id\": \"$uuid\",\"alterId\": 0,\"email\": \"$user\"}" /etc/xray/config.json
 
 # Buat link
 vmesslink1="vmess://$(echo -n "{\"v\":\"2\",\"ps\":\"${user}\",\"add\":\"${domain}\",\"port\":\"${tls}\",\"id\":\"${uuid}\",\"aid\":\"0\",\"net\":\"ws\",\"path\":\"/vmess\",\"type\":\"none\",\"host\":\"${domain}\",\"tls\":\"tls\"}" | base64 -w 0)"
